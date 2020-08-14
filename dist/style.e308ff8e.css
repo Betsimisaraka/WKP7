@@ -34,7 +34,7 @@ div {
 header > h1 {
     display: block;
     text-indent: -9999px;
-    background-image: url(/assets/onja_logo.png);
+    background-image: url(/onja_logo.e06379e7.png);
     background-repeat: no-repeat;
     background-size: 182px 69px;
     height: 70px;
@@ -106,3 +106,5 @@ h4 {
     text-transform: uppercase;
     color: #747474;
 }
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
