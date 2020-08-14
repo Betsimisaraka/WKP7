@@ -118,14 +118,85 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"script.js":[function(require,module,exports) {
-// 1- When users load the app for the first time, a list of 3 books minimum should already be present on the list. The list will always be generated dynamically with some state in the javascript.
 // 1-a Create an object that contain 3 arrays of books
-// 2-b Map through them to access thier value
-// 2- Users should be able to change the read attribute status by clicking the checkbox (and the changes will be reflected in the app state)
-//2-a Check if the checkbox is checked and change the status
-//2-b The same if it's not checked
-// 3- Users should be able to delete a book from the list by clicking the trash icon (and reflect that in the app state as well)
-//3-a Delete button
+var books = [{
+  title: 'Harry Porter',
+  author: 'Ally',
+  genre: 'Romence',
+  pages: 200,
+  status: true,
+  id: 01
+}, {
+  title: 'Twilight',
+  author: 'Edward',
+  genre: 'Horor',
+  pages: 400,
+  status: false,
+  id: 02
+}, {
+  title: 'Kira-Kira',
+  author: 'Nicola',
+  genre: 'Thriller',
+  pages: 300,
+  status: true,
+  id: 03
+}]; // 2-b Map through them to access thier value
+
+var formElement = document.querySelector('.book_form');
+var listElement = document.querySelector('.book_list');
+var addButton = document.querySelector('.addbtn');
+
+var handleBookList = function handleBookList() {
+  var html = books.map(function (book) {
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\">&times</button>\n            </li>\n        ");
+  }).join('');
+  listElement.innerHTML = html;
+}; //Add a new book form the input value
+
+
+var newBook = [];
+
+var handleAddBtn = function handleAddBtn(e) {
+  e.preventDefault();
+  var details = e.currentTarget;
+  var bookTitle = details.title.value;
+  var bookAuthor = details.author.value;
+  var bookGenre = details.genre.value;
+  var bookPages = details.numbers.value;
+  var bookStatus = details.status.value;
+
+  if (bookStatus.value === 'Not yet read') {
+    return status = false;
+  }
+
+  if (bookStatus.value === 'Read') {
+    return status = true;
+  }
+
+  var book = {
+    title: bookTitle,
+    author: bookAuthor,
+    genre: bookGenre,
+    pages: bookPages,
+    status: bookStatus,
+    id: Date.now()
+  };
+  newBook.push(book);
+  console.info("There are now ".concat(books.length, " in your state"));
+  e.target.reset();
+  listElement.dispatchEvent(new CustomEvent('bookUpdated'));
+};
+
+var display = function display(e) {
+  var html = newBook.map(function (book) {
+    return "\n        <li class=\"list_items\">\n            <p class=\"title\">".concat(book.title, "</p>\n            <p class=\"author\">").concat(book.author, "</p>\n            <p class=\"genre\">").concat(book.genre, "</p>\n            <p class=\"pages\">").concat(book.pages, "</p>\n            <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n            <button class=\"delete\">&times</button>\n        </li>\n    ");
+  }).join('');
+  listElement.insertAdjacentHTML('afterend', html);
+};
+
+listElement.addEventListener('bookUpdated', display);
+formElement.addEventListener('submit', handleAddBtn);
+window.addEventListener('DOMContentLoaded', handleBookList); //Delete button
 // 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
 // 4-a Create a custom event to store the list of books in the Local Storage
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

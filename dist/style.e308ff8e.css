@@ -60,6 +60,7 @@ h3 {
     padding: 16px;
     background: #FFFFFF;
     border-radius: 10px;
+    margin-bottom: 1rem;
 }
 
 .addbtn {
@@ -81,7 +82,7 @@ label {
     color: #2E2E2E
 }
 
-input {
+.form_input {
     background: #F3F3F3;
     border-radius: 5px;
     border: none;
@@ -89,13 +90,13 @@ input {
 }
 
 .second {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 20px;
     background: rgba(0, 127, 189, 0.03);
     border-radius: 10px 10px 0px 0px;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(116, 116, 116, 0.2);
 }
 
 h4 {
@@ -105,6 +106,21 @@ h4 {
     letter-spacing: 0.11em;
     text-transform: uppercase;
     color: #747474;
+}
+
+.book_list {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+}
+
+.list_items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(116, 116, 116, 0.2);
+    padding: 1rem;
 }
 
 /*# sourceMappingURL=/style.e308ff8e.css.map */
