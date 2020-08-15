@@ -118,6 +118,20 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"script.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
+
 // 1-a Create an object that contain 3 arrays of books
 var books = [{
   title: 'Harry Porter',
@@ -144,17 +158,7 @@ var books = [{
 
 var formElement = document.querySelector('.book_form');
 var listElement = document.querySelector('.book_list');
-var addButton = document.querySelector('.addbtn');
-
-var handleBookList = function handleBookList() {
-  var html = books.map(function (book) {
-    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\">&times</button>\n            </li>\n        ");
-  }).join('');
-  listElement.innerHTML = html;
-}; //Add a new book form the input value
-
-
-var newBook = [];
+var addButton = document.querySelector('.addbtn'); //Add a new book form the input value
 
 var handleAddBtn = function handleAddBtn(e) {
   e.preventDefault();
@@ -164,15 +168,6 @@ var handleAddBtn = function handleAddBtn(e) {
   var bookGenre = details.genre.value;
   var bookPages = details.numbers.value;
   var bookStatus = details.status.value;
-
-  if (bookStatus.value === 'Not yet read') {
-    return status = false;
-  }
-
-  if (bookStatus.value === 'Read') {
-    return status = true;
-  }
-
   var book = {
     title: bookTitle,
     author: bookAuthor,
@@ -181,23 +176,44 @@ var handleAddBtn = function handleAddBtn(e) {
     status: bookStatus,
     id: Date.now()
   };
-  newBook.push(book);
+  books.push(book);
   console.info("There are now ".concat(books.length, " in your state"));
   e.target.reset();
   listElement.dispatchEvent(new CustomEvent('bookUpdated'));
+  handleBookList();
 };
 
-var display = function display(e) {
-  var html = newBook.map(function (book) {
-    return "\n        <li class=\"list_items\">\n            <p class=\"title\">".concat(book.title, "</p>\n            <p class=\"author\">").concat(book.author, "</p>\n            <p class=\"genre\">").concat(book.genre, "</p>\n            <p class=\"pages\">").concat(book.pages, "</p>\n            <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n            <button class=\"delete\">&times</button>\n        </li>\n    ");
+var handleBookList = function handleBookList(e) {
+  var booksCopy = _toConsumableArray(books);
+
+  var html = booksCopy.map(function (book) {
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\">&times</button>\n            </li>\n        ");
   }).join('');
-  listElement.insertAdjacentHTML('afterend', html);
+  listElement.innerHTML = html;
+}; //listElement.addEventListener('bookUpdated', display);
+//Delete button
+
+
+var deleteBtn = function deleteBtn(id) {
+  console.log('deleted item', id);
+  books = (_readOnlyError("books"), books.filter(function (book) {
+    return book.id === id;
+  }));
+  listElement.dispatchEvent(new CustomEvent('bookUpdated'));
 };
 
-listElement.addEventListener('bookUpdated', display);
+listElement.addEventListener('click', function (e) {
+  var id = e.target.value;
+
+  if (e.target.matches('button.deletebtn')) {
+    deleteBtn(id);
+  }
+
+  console.log(id);
+});
 formElement.addEventListener('submit', handleAddBtn);
-window.addEventListener('DOMContentLoaded', handleBookList); //Delete button
-// 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
+listElement.addEventListener('bookUpdated', handleBookList);
+window.addEventListener('DOMContentLoaded', handleBookList); // 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
 // 4-a Create a custom event to store the list of books in the Local Storage
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -227,7 +243,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57876" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49853" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

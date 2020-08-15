@@ -34,7 +34,7 @@ div {
 header > h1 {
     display: block;
     text-indent: -9999px;
-    background-image: url(/assets/onja_logo.png);
+    background-image: url(./assets/onja_logo.png);
     background-repeat: no-repeat;
     background-size: 182px 69px;
     height: 70px;
