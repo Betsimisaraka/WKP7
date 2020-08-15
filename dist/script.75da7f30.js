@@ -130,45 +130,51 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
-
 // 1-a Create an object that contain 3 arrays of books
 var books = [{
   title: 'Harry Porter',
   author: 'Ally',
   genre: 'Romence',
   pages: 200,
-  status: true,
-  id: 01
+  status: true
 }, {
   title: 'Twilight',
   author: 'Edward',
   genre: 'Horor',
   pages: 400,
-  status: false,
-  id: 02
+  status: false
 }, {
   title: 'Kira-Kira',
   author: 'Nicola',
   genre: 'Thriller',
   pages: 300,
-  status: true,
-  id: 03
+  status: true
 }]; // 2-b Map through them to access thier value
 
 var formElement = document.querySelector('.book_form');
 var listElement = document.querySelector('.book_list');
-var addButton = document.querySelector('.addbtn'); //Add a new book form the input value
+var addButton = document.querySelector('.addbtn');
+
+var handleBookList = function handleBookList(e) {
+  var html = books.map(function (book) {
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\">&times</button>\n            </li>\n        ");
+  }).join('');
+  listElement.innerHTML = html;
+};
+
+handleBookList(); //Add a new book form the input value
+
+var newBook = [];
 
 var handleAddBtn = function handleAddBtn(e) {
   e.preventDefault();
-  var details = e.currentTarget;
-  var bookTitle = details.title.value;
-  var bookAuthor = details.author.value;
-  var bookGenre = details.genre.value;
-  var bookPages = details.numbers.value;
-  var bookStatus = details.status.value;
-  var book = {
+  var form = e.target;
+  var bookTitle = form.title.value;
+  var bookAuthor = form.author.value;
+  var bookGenre = form.genre.value;
+  var bookPages = form.numbers.value;
+  var bookStatus = form.status.value;
+  var myBook = {
     title: bookTitle,
     author: bookAuthor,
     genre: bookGenre,
@@ -176,45 +182,70 @@ var handleAddBtn = function handleAddBtn(e) {
     status: bookStatus,
     id: Date.now()
   };
-  books.push(book);
-  console.info("There are now ".concat(books.length, " in your state"));
+  newBook.push(myBook);
+  console.info("There are now ".concat(newBook.length, " in your state"));
   e.target.reset();
-  listElement.dispatchEvent(new CustomEvent('bookUpdated'));
-  handleBookList();
+  listElement.dispatchEvent(new CustomEvent('booksUpdated'));
 };
 
-var handleBookList = function handleBookList(e) {
-  var booksCopy = _toConsumableArray(books);
-
-  var html = booksCopy.map(function (book) {
-    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\">&times</button>\n            </li>\n        ");
+var displayList = function displayList(e) {
+  var myHtml = newBook.map(function (book) {
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status === 'read' ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\">&times</button>\n            </li>\n        ");
   }).join('');
-  listElement.innerHTML = html;
-}; //listElement.addEventListener('bookUpdated', display);
-//Delete button
-
-
-var deleteBtn = function deleteBtn(id) {
-  console.log('deleted item', id);
-  books = (_readOnlyError("books"), books.filter(function (book) {
-    return book.id === id;
-  }));
-  listElement.dispatchEvent(new CustomEvent('bookUpdated'));
+  listElement.insertAdjacentHTML('beforeend', myHtml);
 };
 
-listElement.addEventListener('click', function (e) {
-  var id = e.target.value;
+var mirrorToLocalStorage = function mirrorToLocalStorage() {
+  console.info('Keep the list appear');
+  var local = JSON.stringify(newBook);
+  localStorage.setItem('books', local);
+};
 
-  if (e.target.matches('button.deletebtn')) {
-    deleteBtn(id);
+var restoreFromLocalStorage = function restoreFromLocalStorage() {
+  console.info('restoring from LS');
+  var lsBooks = JSON.parse(localStorage.getItem('books')); //check if there is something inside local storage
+
+  if (lsBooks) {
+    newBook.push.apply(newBook, _toConsumableArray(lsBooks));
+  }
+
+  listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+};
+
+formElement.addEventListener('submit', handleAddBtn);
+listElement.addEventListener('booksUpdated', displayList);
+listElement.addEventListener('booksUpdated', mirrorToLocalStorage); //window.addEventListener('DOMContentLoaded', handleBookList);
+
+var deleteBtn = function deleteBtn(event) {
+  var id = event.target.value;
+
+  if (event.target.classList.contains('delete')) {
+    var deleteButton = event.target;
+    deleteButton.closest('.list_items').remove();
   }
 
   console.log(id);
-});
-formElement.addEventListener('submit', handleAddBtn);
-listElement.addEventListener('bookUpdated', handleBookList);
-window.addEventListener('DOMContentLoaded', handleBookList); // 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
+};
+
+window.addEventListener('click', deleteBtn);
+
+var markAsRead = function markAsRead(id) {
+  console.log('read', id);
+  var bookRef = newBook.find(function (item) {
+    return item.id === id;
+  });
+  bookRef.status = !bookRef.status;
+  listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+};
+
+listElement.addEventListener('click', function (e) {
+  if (e.target.matches('input[type="checkbox"]')) {
+    markAsRead();
+  }
+}); // 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
 // 4-a Create a custom event to store the list of books in the Local Storage
+
+restoreFromLocalStorage();
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -243,7 +274,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49853" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49276" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
