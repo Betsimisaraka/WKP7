@@ -1,5 +1,5 @@
 
-// 1-a Create an object that contain 3 arrays of books
+// Create an object that contain 3 arrays of books
 const books = [
     {
         title: 'Harry Porter',
@@ -24,6 +24,7 @@ const books = [
     }
 ]
 
+//Variables
 const formElement = document.querySelector('.book_form');
 const listElement = document.querySelector('.book_list');
 const addButton = document.querySelector('.addbtn');
@@ -38,11 +39,11 @@ const handleBookList = e => {
                 <p class="genre">${book.genre}</p>
                 <p class="pages">${book.pages}</p>
                 <input type="checkbox" class="checkbox" ${book.status ? 'checked' : ''}>
-                <button class="delete">&times</button>
+                <button class="delete"></button>
             </li>
         `).join('');
     listElement.innerHTML = html;
-};
+}; handleBookList();
 
 //Add a new book form the input value
 const newBook =[];
@@ -69,6 +70,7 @@ const handleAddBtn = e => {
     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
 }
 
+//New book list from the value of the form
 const displayList = e => {
     const myHtml = newBook.map(
         book => `
@@ -78,7 +80,7 @@ const displayList = e => {
                 <p class="genre">${book.genre}</p>
                 <p class="pages">${book.pages}</p>
                 <input type="checkbox" class="checkbox" ${book.status === 'read' ? 'checked' : ''}>
-                <button value="${book.id}" class="delete">&times</button>
+                <button value="${book.id}" class="delete"></button>
             </li>
         `).join('');
     listElement.insertAdjacentHTML('beforeend', myHtml);
@@ -104,17 +106,27 @@ const restoreFromLocalStorage = () => {
     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
 };
 
-formElement.addEventListener('submit', handleAddBtn);
-listElement.addEventListener('booksUpdated', displayList);
-listElement.addEventListener('booksUpdated', mirrorToLocalStorage);
-window.addEventListener('DOMContentLoaded', handleBookList);
-
+//Delete button to delete the array from the list
 const deleteBtn = event => {
     if (event.target.classList.contains('delete')) {
         const deleteButton = event.target;
         deleteButton.closest('.list_items').remove();
     }
 };
+
+//Change the status if the book has been read or not.
+const markAsRead = (id) => {
+    console.log('read', id);
+    const bookRef = newBook.find(item => item.id === id);
+    bookRef.status = !bookRef.status;
+    listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+};
+
+// EVENT LISTENERS
+formElement.addEventListener('submit', handleAddBtn);
+listElement.addEventListener('booksUpdated', displayList);
+listElement.addEventListener('booksUpdated', mirrorToLocalStorage);
+//window.addEventListener('DOMContentLoaded', handleBookList);
 
 listElement.addEventListener('click', deleteBtn);
 
@@ -123,14 +135,6 @@ listElement.addEventListener('click', deleteBtn);
 //     newBook = newBook.filter(book => book.id !== id);
 //     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
 // }
-
-const markAsRead = (id) => {
-    console.log('read', id);
-    const bookRef = newBook.find(item => item.id === id);
-    bookRef.status = !bookRef.status;
-    listElement.dispatchEvent(new CustomEvent('booksUpdated'));
-};
-
 
 
 listElement.addEventListener('click', function(e) {

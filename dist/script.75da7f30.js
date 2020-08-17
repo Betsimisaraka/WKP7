@@ -130,7 +130,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-// 1-a Create an object that contain 3 arrays of books
+// Create an object that contain 3 arrays of books
 var books = [{
   title: 'Harry Porter',
   author: 'Ally',
@@ -149,18 +149,20 @@ var books = [{
   genre: 'Thriller',
   pages: 300,
   status: true
-}];
+}]; //Variables
+
 var formElement = document.querySelector('.book_form');
 var listElement = document.querySelector('.book_list');
 var addButton = document.querySelector('.addbtn'); // Map through them to access thier value
 
 var handleBookList = function handleBookList(e) {
   var html = books.map(function (book) {
-    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\">&times</button>\n            </li>\n        ");
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\"></button>\n            </li>\n        ");
   }).join('');
   listElement.innerHTML = html;
-}; //Add a new book form the input value
+};
 
+handleBookList(); //Add a new book form the input value
 
 var newBook = [];
 
@@ -184,11 +186,12 @@ var handleAddBtn = function handleAddBtn(e) {
   console.info("There are now ".concat(newBook.length, " in your state"));
   e.target.reset();
   listElement.dispatchEvent(new CustomEvent('booksUpdated'));
-};
+}; //New book list from the value of the form
+
 
 var displayList = function displayList(e) {
   var myHtml = newBook.map(function (book) {
-    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status === 'read' ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\">&times</button>\n            </li>\n        ");
+    return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status === 'read' ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\"></button>\n            </li>\n        ");
   }).join('');
   listElement.insertAdjacentHTML('beforeend', myHtml);
 }; // 4-a Create a custom event to store the list of books in the Local Storage
@@ -210,25 +213,16 @@ var restoreFromLocalStorage = function restoreFromLocalStorage() {
   }
 
   listElement.dispatchEvent(new CustomEvent('booksUpdated'));
-};
+}; //Delete button to delete the array from the list
 
-formElement.addEventListener('submit', handleAddBtn);
-listElement.addEventListener('booksUpdated', displayList);
-listElement.addEventListener('booksUpdated', mirrorToLocalStorage);
-window.addEventListener('DOMContentLoaded', handleBookList);
 
 var deleteBtn = function deleteBtn(event) {
   if (event.target.classList.contains('delete')) {
     var deleteButton = event.target;
     deleteButton.closest('.list_items').remove();
   }
-};
+}; //Change the status if the book has been read or not.
 
-listElement.addEventListener('click', deleteBtn); // const deleteBtn = id => {
-//     console.log('this deletes', id);
-//     newBook = newBook.filter(book => book.id !== id);
-//     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
-// }
 
 var markAsRead = function markAsRead(id) {
   console.log('read', id);
@@ -237,7 +231,18 @@ var markAsRead = function markAsRead(id) {
   });
   bookRef.status = !bookRef.status;
   listElement.dispatchEvent(new CustomEvent('booksUpdated'));
-};
+}; // EVENT LISTENERS
+
+
+formElement.addEventListener('submit', handleAddBtn);
+listElement.addEventListener('booksUpdated', displayList);
+listElement.addEventListener('booksUpdated', mirrorToLocalStorage); //window.addEventListener('DOMContentLoaded', handleBookList);
+
+listElement.addEventListener('click', deleteBtn); // const deleteBtn = id => {
+//     console.log('this deletes', id);
+//     newBook = newBook.filter(book => book.id !== id);
+//     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+// }
 
 listElement.addEventListener('click', function (e) {
   var id = Number(e.target.value); // if (e.target.matches('button.delete')) {

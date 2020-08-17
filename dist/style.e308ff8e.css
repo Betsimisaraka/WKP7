@@ -123,4 +123,14 @@ h4 {
     padding: 1rem;
 }
 
+.delete {
+    background-image: url(/delete-button.26d214bc.png);
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    background-position: center center;
+    border: none;
+    background-color: none;
+    height: 24px;
+}
+
 /*# sourceMappingURL=/style.e308ff8e.css.map */

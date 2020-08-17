@@ -122,3 +122,13 @@ h4 {
     border-bottom: 1px solid rgba(116, 116, 116, 0.2);
     padding: 1rem;
 }
+
+.delete {
+    background-image: url(./assets/delete-button.png);
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    background-position: center center;
+    border: none;
+    background-color: none;
+    height: 24px;
+}
