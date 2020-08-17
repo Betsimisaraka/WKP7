@@ -23,11 +23,12 @@ const books = [
         status: true,
     }
 ]
-// 2-b Map through them to access thier value
+
 const formElement = document.querySelector('.book_form');
 const listElement = document.querySelector('.book_list');
 const addButton = document.querySelector('.addbtn');
 
+// Map through them to access thier value
 const handleBookList = e => {
     const html = books.map(
         book => `
@@ -41,7 +42,7 @@ const handleBookList = e => {
             </li>
         `).join('');
     listElement.innerHTML = html;
-}; handleBookList();
+};
 
 //Add a new book form the input value
 const newBook =[];
@@ -83,11 +84,15 @@ const displayList = e => {
     listElement.insertAdjacentHTML('beforeend', myHtml);
 } 
 
+// 4-a Create a custom event to store the list of books in the Local Storage
+
 const mirrorToLocalStorage = () => {
     console.info('Keep the list appear');
     const local = JSON.stringify(newBook);
     localStorage.setItem('books', local);
 }
+
+//When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
 
 const restoreFromLocalStorage = () => {
     console.info('restoring from LS');
@@ -102,18 +107,22 @@ const restoreFromLocalStorage = () => {
 formElement.addEventListener('submit', handleAddBtn);
 listElement.addEventListener('booksUpdated', displayList);
 listElement.addEventListener('booksUpdated', mirrorToLocalStorage);
-//window.addEventListener('DOMContentLoaded', handleBookList);
+window.addEventListener('DOMContentLoaded', handleBookList);
 
 const deleteBtn = event => {
-    const id = event.target.value;
     if (event.target.classList.contains('delete')) {
         const deleteButton = event.target;
         deleteButton.closest('.list_items').remove();
     }
-    console.log(id);
 };
 
-window.addEventListener('click', deleteBtn);
+listElement.addEventListener('click', deleteBtn);
+
+// const deleteBtn = id => {
+//     console.log('this deletes', id);
+//     newBook = newBook.filter(book => book.id !== id);
+//     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+// }
 
 const markAsRead = (id) => {
     console.log('read', id);
@@ -122,12 +131,17 @@ const markAsRead = (id) => {
     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
 };
 
+
+
 listElement.addEventListener('click', function(e) {
+    const id = Number(e.target.value);
+    // if (e.target.matches('button.delete')) {
+    //     deleteBtn(id);
+    // }
     if (e.target.matches('input[type="checkbox"]')) {
-        markAsRead();
+        markAsRead(id);
     }
+    console.log(id);
 })
-// 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
-// 4-a Create a custom event to store the list of books in the Local Storage
 
 restoreFromLocalStorage();

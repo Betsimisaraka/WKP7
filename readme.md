@@ -1,35 +1,32 @@
 # WKP7 - Library
 
-### Hey team!
+## 1. In a few sentences,  explain the structure of your project.
 
-Hope you are ready for a new challenge. I have a nice one for you this week. We're going to build a library management application. The application will consist on a form to add a book, and a table listing all the books. After submitting the form, the new book will appear on the book table.
+- First I created the three array inside of an Object. 
+- I created an empty array and I push the new book into the new empty array.
+- I store them in the local storage so that the user can access their book when they come back later
+- After that I did the checkbox if the book has been read or not. If it has been read the checkbox is checked, but if not the checkbox is unchecked.
 
-### Here is the mockup of our library app.
+## 2. If you had more time, what area of your project would you improve?
 
-![assets/wkp7-library.png](assets/wkp7-library.png)
+If I had more time, the area of my project that I would improve is the delete button because I didn't get it work as it suppose to be.
 
-[You can also access the design through figma.](https://www.figma.com/file/FoD2jZb5oOGZvTUMop0nbA/WKP7?node-id=1%3A2)
+## 3. Did you learn anything new while working on this project?
 
-### A book needs those attributes :
+Not really, but I can say that it helps me a lot to really understand how the map works. Not only that but also it trains me to aware of how to store an item in the local storage using new Custom event.
 
--   A title
--   An author
--   A genre (Mystery, Thriller, Fiction, Non-fiction, Fantasy, Design, Memoirs...)
--   A number of pages
--   A status (Read or not)
+## 4. What was the most challenging part for you?
 
-### Requirements :
+Most of them are challenging but the delete button and the checkbox are the most challenging part for me.
 
--   When users load the app for the first time, a list of 3 books minimum should already be present on the list. The list will always be generated dynamically with some state in the javascript.
--   Users should be able to change the read attribute status by clicking the checkbox (and the changes will be reflected in the app state)
--   Users should be able to delete a book from the list by clicking the trash icon (and reflect that in the app state as well)
--   When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's _Local Storage_.
+## 5. Would you like a new explanation about a specific topic?
 
-### Tips :
+Absolutely, I really need more explanation about these few things below:
 
--   Focus on the features first, and if you have some time left, try to replicate this design.
--   Start by choosing the book data structure, and create a few of them in the code.
--   Focus on your basic app functionality first, and then try to save the state of your app to _Local Storage_.
--   I suggest you to look back to the Shopping List exercise we did together (Video 57). There is a lot of similarities between the exercise and this project 😉
+- new Custom event
+- to delete the array from the local storage or from the object. Because, I only get it deleted from the browser but not from the object.
+- to change the status when the checkbox is checked or unchecked.
 
-### Good luck team 🙌
+## 6. Any other comments?
+
+I don't have much to say apart from that. But I appreciate what you have done for us. Thank you for your hard working.

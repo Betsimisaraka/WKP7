@@ -149,20 +149,18 @@ var books = [{
   genre: 'Thriller',
   pages: 300,
   status: true
-}]; // 2-b Map through them to access thier value
-
+}];
 var formElement = document.querySelector('.book_form');
 var listElement = document.querySelector('.book_list');
-var addButton = document.querySelector('.addbtn');
+var addButton = document.querySelector('.addbtn'); // Map through them to access thier value
 
 var handleBookList = function handleBookList(e) {
   var html = books.map(function (book) {
     return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status ? 'checked' : '', ">\n                <button class=\"delete\">&times</button>\n            </li>\n        ");
   }).join('');
   listElement.innerHTML = html;
-};
+}; //Add a new book form the input value
 
-handleBookList(); //Add a new book form the input value
 
 var newBook = [];
 
@@ -193,13 +191,15 @@ var displayList = function displayList(e) {
     return "\n            <li class=\"list_items\">\n                <p class=\"title\">".concat(book.title, "</p>\n                <p class=\"author\">").concat(book.author, "</p>\n                <p class=\"genre\">").concat(book.genre, "</p>\n                <p class=\"pages\">").concat(book.pages, "</p>\n                <input type=\"checkbox\" class=\"checkbox\" ").concat(book.status === 'read' ? 'checked' : '', ">\n                <button value=\"").concat(book.id, "\" class=\"delete\">&times</button>\n            </li>\n        ");
   }).join('');
   listElement.insertAdjacentHTML('beforeend', myHtml);
-};
+}; // 4-a Create a custom event to store the list of books in the Local Storage
+
 
 var mirrorToLocalStorage = function mirrorToLocalStorage() {
   console.info('Keep the list appear');
   var local = JSON.stringify(newBook);
   localStorage.setItem('books', local);
-};
+}; //When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
+
 
 var restoreFromLocalStorage = function restoreFromLocalStorage() {
   console.info('restoring from LS');
@@ -214,20 +214,21 @@ var restoreFromLocalStorage = function restoreFromLocalStorage() {
 
 formElement.addEventListener('submit', handleAddBtn);
 listElement.addEventListener('booksUpdated', displayList);
-listElement.addEventListener('booksUpdated', mirrorToLocalStorage); //window.addEventListener('DOMContentLoaded', handleBookList);
+listElement.addEventListener('booksUpdated', mirrorToLocalStorage);
+window.addEventListener('DOMContentLoaded', handleBookList);
 
 var deleteBtn = function deleteBtn(event) {
-  var id = event.target.value;
-
   if (event.target.classList.contains('delete')) {
     var deleteButton = event.target;
     deleteButton.closest('.list_items').remove();
   }
-
-  console.log(id);
 };
 
-window.addEventListener('click', deleteBtn);
+listElement.addEventListener('click', deleteBtn); // const deleteBtn = id => {
+//     console.log('this deletes', id);
+//     newBook = newBook.filter(book => book.id !== id);
+//     listElement.dispatchEvent(new CustomEvent('booksUpdated'));
+// }
 
 var markAsRead = function markAsRead(id) {
   console.log('read', id);
@@ -239,12 +240,16 @@ var markAsRead = function markAsRead(id) {
 };
 
 listElement.addEventListener('click', function (e) {
-  if (e.target.matches('input[type="checkbox"]')) {
-    markAsRead();
-  }
-}); // 4- When a user come back to the app with the same browser, they should see the same book list as it was, before they left the app. Save the current book list to your browser's Local Storage.
-// 4-a Create a custom event to store the list of books in the Local Storage
+  var id = Number(e.target.value); // if (e.target.matches('button.delete')) {
+  //     deleteBtn(id);
+  // }
 
+  if (e.target.matches('input[type="checkbox"]')) {
+    markAsRead(id);
+  }
+
+  console.log(id);
+});
 restoreFromLocalStorage();
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -274,7 +279,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49276" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49950" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
